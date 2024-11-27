@@ -1418,7 +1418,9 @@ class Request:
             sameSite = _ensureBytes(sameSite).lower()
             if not secure and sameSite == b"none":
                 raise ValueError(
-                    "Invalid value for sameSite: " + repr(sameSite) + ". Missing the \"secure\" attribute"
+                    "Invalid value for sameSite: "
+                    + repr(sameSite)
+                    + '. Missing the "secure" attribute'
                 )
             if sameSite not in [b"lax", b"strict", b"none"]:
                 raise ValueError("Invalid value for sameSite: " + repr(sameSite))
