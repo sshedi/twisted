@@ -1416,7 +1416,11 @@ class Request:
             cookie = cookie + b"; HttpOnly"
         if sameSite:
             sameSite = _ensureBytes(sameSite).lower()
-            if sameSite not in [b"lax", b"strict"]:
+            if not secure and sameSite == b"none":
+                raise ValueError(
+                    "Invalid value for sameSite: " + repr(sameSite) + ". Missing the \"secure\" attribute"
+                )
+            if sameSite not in [b"lax", b"strict", b"none"]:
                 raise ValueError("Invalid value for sameSite: " + repr(sameSite))
             cookie += b"; SameSite=" + sameSite
         self.cookies.append(cookie)
