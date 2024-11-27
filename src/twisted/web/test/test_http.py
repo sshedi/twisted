@@ -3412,9 +3412,21 @@ class RequestTests(unittest.TestCase, ResponseTestMixin):
         self._checkCookie(
             b"foo=bar; SameSite=strict", b"foo", b"bar", sameSite="strict"
         )
+        self._checkCookie(
+            b"foo=bar; Secure; SameSite=none", b"foo", b"bar", sameSite="None", secure=True
+        )
+        self._checkCookie(
+            b"foo=bar; Secure; SameSite=none", b"foo", b"bar", sameSite="none", secure=True
+        )
 
         self.assertRaises(
             ValueError, self._checkCookie, b"", b"foo", b"bar", sameSite="anything-else"
+        )
+        self.assertRaises(
+            ValueError, self._checkCookie, b"", b"foo", b"bar", sameSite="none", secure=False
+        )
+        self.assertRaises(
+            ValueError, self._checkCookie, b"", b"foo", b"bar", sameSite="none"
         )
 
     def test_firstWrite(self):
