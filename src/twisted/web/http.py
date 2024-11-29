@@ -1416,6 +1416,8 @@ class Request:
             cookie = cookie + b"; HttpOnly"
         if sameSite:
             sameSite = _ensureBytes(sameSite).lower()
+            # See more info about sameSite usage here
+            # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value
             if not secure and sameSite == b"none":
                 raise ValueError(
                     "Invalid value for sameSite: "
