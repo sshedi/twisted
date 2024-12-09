@@ -1,1 +1,1 @@
-added support for `none` value for cookie's `samesite` attribute. Now it can be set like: `request.addCookie(samesite="none", secure=True)`. Only `secure` cookie mave have `none` value (check for reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value)
+twisted.web.http.Request.addCookie now supports the `none` value for cookie's `samesite` attribute.

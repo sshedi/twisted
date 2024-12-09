@@ -3445,8 +3445,7 @@ class RequestTests(unittest.TestCase, ResponseTestMixin):
 
     def test_addCookieWrongValues(self):
         """
-        L{http.Request.setCookie} with bad C{sameSite} values.
-        It will set the cookie with not supported samesite value and without a necessary
+        Raises an exception when setting the cookie with not supported samesite value and without a necessary
         secure attribute for the samesite=none cookie.
         """
         error = self.assertRaises(
