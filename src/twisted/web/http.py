@@ -1362,10 +1362,7 @@ class Request:
             other than HTTP (and HTTPS) requests
         @type httpOnly: L{bool}
 
-        @param sameSite: One of L{None} (default), C{'lax'} or C{'strict'}.
-            Direct browsers not to send this cookie on cross-origin requests.
-            Please see:
-            U{https://tools.ietf.org/html/draft-west-first-party-cookies-07}
+        @param sameSite: One of L{None} (default), C{'lax'}, C{'none'} or C{'strict'}. Direct browsers not to send this cookie on cross-origin requests. See: U{https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value}
         @type sameSite: L{None}, L{bytes} or L{str}
 
         @raise ValueError: If the value for C{sameSite} is not supported.
