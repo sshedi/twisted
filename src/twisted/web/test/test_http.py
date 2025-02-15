@@ -3428,6 +3428,7 @@ class RequestTests(unittest.TestCase, ResponseTestMixin):
     def test_addCookieSameSite(self):
         """
         L{http.Request.setCookie} supports a C{sameSite} argument.
+        It will set the cookie with samesite=lax and samesite=strict values.
         """
         self._checkCookie(b"foo=bar; SameSite=lax", b"foo", b"bar", sameSite="lax")
         self._checkCookie(b"foo=bar; SameSite=lax", b"foo", b"bar", sameSite="Lax")
@@ -3435,8 +3436,65 @@ class RequestTests(unittest.TestCase, ResponseTestMixin):
             b"foo=bar; SameSite=strict", b"foo", b"bar", sameSite="strict"
         )
 
-        self.assertRaises(
+    def test_addCookieSameSiteNoneSecure(self):
+        """
+        L{http.Request.setCookie} supports the C{sameSite} argument together with secure.
+        It will set the cookie with samesite=none and secure attributes to be sure that
+        all values of samesite are supported. secure attribute is a necessary condition
+        if the samesite is none
+        """
+        self._checkCookie(
+            b"foo=bar; Secure; SameSite=none",
+            b"foo",
+            b"bar",
+            sameSite="None",
+            secure=True,
+        )
+        self._checkCookie(
+            b"foo=bar; Secure; SameSite=none",
+            b"foo",
+            b"bar",
+            sameSite="none",
+            secure=True,
+        )
+        self._checkCookie(
+            b"foo=bar; Secure; SameSite=none",
+            b"foo",
+            b"bar",
+            sameSite=b"none",
+            secure=True,
+        )
+
+    def test_addCookieWrongValues(self):
+        """
+        Raises an exception when setting the cookie with not supported samesite value and without a necessary
+        secure attribute for the samesite=none cookie.
+        """
+        error = self.assertRaises(
             ValueError, self._checkCookie, b"", b"foo", b"bar", sameSite="anything-else"
+        )
+        self.assertEqual("Invalid value for sameSite: b'anything-else'", error.args[0])
+
+        error = self.assertRaises(
+            ValueError,
+            self._checkCookie,
+            b"",
+            b"foo",
+            b"bar",
+            sameSite="none",
+            secure=False,
+        )
+        self.assertEqual(
+            "Invalid value for sameSite: b'none'. Missing the \"secure\" attribute",
+            error.args[0],
+        )
+
+        error = self.assertRaises(
+            ValueError, self._checkCookie, b"", b"foo", b"bar", sameSite="none"
+        )
+        self.assertEqual(
+            "Invalid value for sameSite: b'none'. Missing the \"secure\" attribute",
+            error.args[0],
         )
 
     def test_firstWrite(self):
